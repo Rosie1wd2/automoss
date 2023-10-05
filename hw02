@@ -1,0 +1,108 @@
+def reverse_engineer(seq):
+    """
+    Reverse engineer an input sequence
+    
+    Parameters:
+        seq - list of strings
+    
+    Returns:
+        list of values corresponding to each letter present in the sequences (smallest possible values)
+        (in alphabetical order)
+    
+    Example use
+    >>> reverse_engineer(["a", "ab", "c", "a", "ab", "ac"])
+    [2, 4, 5]
+    >>> reverse_engineer(["b", "bc", "ab", "bc", "b", "abc", "b"])
+    [3, 1, 2]
+    >>> reverse_engineer(["a", "b", "d", "c", "a", "ab"])
+    [6, 9, 11, 10]
+    >>> reverse_engineer(['c', 'ce', 'd', 'c', 'ce', 'd', 'c', 'a', 'ce', 'cd', 'b', 'ce', 'c', 'd', 'ce', 'c', 'a', 'd', 'ce', 'c', 'cde', 'c', 'b', 'ce', 'd', 'ac', 'ce', 'd', 'c', 'ce', 'cd', 'ce', 'a', 'bc', 'd', 'ce', 'c', 'd', 'ce', 'c', 'cde', 'a', 'c', 'ce', 'df', 'b', 'c', 'ce', 'd', 'c', 'ace', 'cd', 'ce', 'c', 'd', 'ce', 'b', 'c', 'ad', 'ce', 'c'])
+    [17, 23, 3, 7, 6, 91]
+    """
+    # Your code here. Don't change anything above.
+    
+        
+        
+        
+    
+
+  
+    letter_frequency_dict = {} 
+    seq_list = []
+    
+    for i in seq:
+        seq_i = {}
+        for k in i:
+            if k not in letter_frequency_dict.keys():
+                letter_frequency_dict[k] = 1
+            else:
+                letter_frequency_dict[k] += 1
+            seq_i[k] = letter_frequency_dict[k]
+        seq_list.append(seq_i)
+   
+
+
+
+
+    seq_index = 1
+    guess_dict = {}
+    for key in seq_list[0].keys(): 
+        guess_dict[key] = 1
+    
+    
+   
+    
+   
+    while seq_index < len(seq) :
+        
+        letter_n = list(seq_list[seq_index].keys())[0]
+        letter_n_1 = list(seq_list[seq_index - 1].keys())[0]
+        total_n = guess_dict.get(letter_n,0) * seq_list[seq_index][letter_n] 
+        total_n_1 = guess_dict[letter_n_1] * seq_list[seq_index - 1][letter_n_1]
+
+        
+        
+        if total_n_1 >= total_n:
+            
+            
+            letter_n_frequency = seq_list[seq_index][letter_n]
+            guess_dict[letter_n] = int(total_n_1 / letter_n_frequency + 1) 
+            seq_index = 1
+            continue
+
+        
+        all_letters_n = list(seq_list[seq_index].keys())
+        reset_seq_index = False
+        
+        
+        
+        for (i,letter) in enumerate(all_letters_n[:len(all_letters_n) - 1]) : 
+            for letter_2 in all_letters_n[i + 1:len(all_letters_n)]: 
+                
+                
+                total_letter = guess_dict.get(letter,0) * seq_list[seq_index][letter]
+                total_letter_2 = guess_dict.get(letter_2,0) * seq_list[seq_index][letter_2]
+                if total_letter == total_letter_2 : 
+                    pass
+                elif total_letter < total_letter_2 : 
+                    guess_dict[letter] = max(int(total_letter_2 / seq_list[seq_index][letter]),guess_dict.get(letter,0) + 1) 
+                    reset_seq_index = True
+                else :
+                    guess_dict[letter_2] = max(int(total_letter / seq_list[seq_index][letter_2]),guess_dict.get(letter_2,0) + 1)
+                    reset_seq_index = True
+                    
+                    
+                    
+        if reset_seq_index == True:
+            seq_index = 1
+            continue
+        else :
+            seq_index += 1
+    
+    
+    alphabet = "abcdefghijklmnopqrstuvwxyz" 
+    values_list = []
+    for i in alphabet:
+        if i in guess_dict.keys():
+            values_list.append(guess_dict[i])
+    return(values_list)
